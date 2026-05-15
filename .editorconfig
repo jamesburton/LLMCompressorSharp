@@ -1,0 +1,49 @@
+root = true
+
+[*]
+charset = utf-8
+end_of_line = lf
+indent_style = space
+insert_final_newline = true
+trim_trailing_whitespace = true
+
+[*.{cs,csproj,props,targets,slnx}]
+indent_size = 4
+
+[*.{json,yml,yaml,md}]
+indent_size = 2
+
+# C# language conventions
+[*.cs]
+dotnet_sort_system_directives_first = true
+csharp_new_line_before_open_brace = all
+csharp_new_line_before_else = true
+csharp_new_line_before_catch = true
+csharp_new_line_before_finally = true
+csharp_indent_case_contents = true
+csharp_indent_switch_labels = true
+csharp_style_var_for_built_in_types = true:suggestion
+csharp_style_var_when_type_is_apparent = true:suggestion
+csharp_style_var_elsewhere = true:silent
+csharp_style_expression_bodied_methods = when_on_single_line:suggestion
+csharp_style_expression_bodied_properties = true:suggestion
+csharp_style_expression_bodied_accessors = true:suggestion
+
+# StyleCop: suppress documentation requirements for internal/private types in Phase 0
+[*.cs]
+dotnet_diagnostic.SA1633.severity = none   # File header (we use a different convention)
+dotnet_diagnostic.SA1101.severity = none   # Prefix local calls with this
+dotnet_diagnostic.SA1309.severity = none   # Field names must not begin with underscore
+dotnet_diagnostic.SA1310.severity = none   # Field names must not contain underscore
+dotnet_diagnostic.SA1413.severity = none   # Use trailing comma in multi-line initializers (opinion)
+
+# Allow snake_case at the TorchSharp boundary
+[src/LLMCompressorSharp.TorchExtensions/**.cs]
+dotnet_diagnostic.SA1300.severity = none   # Element should begin with upper-case letter
+dotnet_diagnostic.SA1303.severity = none   # Const field names should begin with upper-case letter
+dotnet_diagnostic.SA1311.severity = none   # Static readonly fields should begin with upper-case letter
+
+[src/LLMCompressorSharp.Transformers/Architectures/**.cs]
+dotnet_diagnostic.SA1300.severity = none
+dotnet_diagnostic.SA1303.severity = none
+dotnet_diagnostic.SA1311.severity = none
