@@ -1,0 +1,26 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <RootNamespace>LLMCompressorSharp.Tests</RootNamespace>
+    <AssemblyName>LLMCompressorSharp.Tests</AssemblyName>
+    <IsPackable>false</IsPackable>
+    <IsPublishable>false</IsPublishable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\LLMCompressorSharp.TorchExtensions\LLMCompressorSharp.TorchExtensions.csproj" />
+    <ProjectReference Include="..\..\src\LLMCompressorSharp.Core\LLMCompressorSharp.Core.csproj" />
+    <ProjectReference Include="..\..\src\LLMCompressorSharp.Transformers\LLMCompressorSharp.Transformers.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" />
+    <PackageReference Include="xunit.v3" />
+    <PackageReference Include="xunit.runner.visualstudio" />
+    <PackageReference Include="coverlet.collector" />
+    <PackageReference Include="FluentAssertions" />
+    <PackageReference Include="TorchSharp" />
+    <PackageReference Include="TorchSharp-cpu" />
+  </ItemGroup>
+
+</Project>

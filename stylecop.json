@@ -3,7 +3,7 @@
   "settings": {
     "documentationRules": {
       "companyName": "LLMCompressorSharp",
-      "copyrightText": "// Copyright (c) James Burton. Licensed under the Apache-2.0 license.",
+      "copyrightText": "Copyright (c) James Burton. Licensed under the Apache-2.0 license.",
       "xmlHeader": false,
       "fileNamingConvention": "stylecop"
     },
