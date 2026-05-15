@@ -47,3 +47,9 @@ dotnet_diagnostic.SA1311.severity = none   # Static readonly fields should begin
 dotnet_diagnostic.SA1300.severity = none
 dotnet_diagnostic.SA1303.severity = none
 dotnet_diagnostic.SA1311.severity = none
+
+# Test projects: suppress documentation requirements — test method names are self-documenting
+[tests/**.cs]
+dotnet_diagnostic.SA1600.severity = none   # Elements should be documented
+dotnet_diagnostic.SA1601.severity = none   # Partial elements should be documented
+dotnet_diagnostic.SA1602.severity = none   # Enumeration items should be documented
