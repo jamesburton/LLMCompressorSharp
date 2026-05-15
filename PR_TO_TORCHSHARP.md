@@ -32,7 +32,7 @@ can find every site when we prepare the actual PR.
 
 ### [R-001] FakeQuantize autograd function
 
-**Status:** Required — pending implementation in `LLMCompressorSharp.TorchExtensions` (Phase 1).
+**Status:** Required — workaround implemented in `LLMCompressorSharp.TorchExtensions/Quantization/FakeQuantizeFunction.cs`. PR pending.
 **Category:** Quantization
 **Source files we'd add/modify in `dotnet/TorchSharp`:**
 - `src/TorchSharp/NN/Quantization/FakeQuantize.cs` (new)
@@ -49,7 +49,7 @@ can find every site when we prepare the actual PR.
 
 ### [R-002] MinMax observers as TorchSharp modules
 
-**Status:** Required — pending implementation in `LLMCompressorSharp.TorchExtensions` (Phase 1).
+**Status:** Required — workaround implemented in `LLMCompressorSharp.TorchExtensions/Observers/*.cs` (MinMaxObserver, PerChannelMinMaxObserver, MovingAverageMinMaxObserver, MSEObserver). PR pending.
 **Category:** Quantization
 **Source files we'd add/modify in `dotnet/TorchSharp`:**
 - `src/TorchSharp/NN/Quantization/Observers/MinMaxObserver.cs` (new)
@@ -67,7 +67,7 @@ can find every site when we prepare the actual PR.
 
 ### [R-003] True packed `QInt4` dtype
 
-**Status:** Required — likely fork-required (blocks pure-extensions strategy).
+**Status:** Required — FP32-backed simulation in `LLMCompressorSharp.TorchExtensions/Quantization/Int4PackedTensor.cs` ships; true packed storage still fork-required. To be revisited at end of Phase 4.
 **Category:** Quantization
 **Source files we'd add/modify in `dotnet/TorchSharp`:**
 - Native LibTorch bindings (Pinvoke layer)
@@ -86,7 +86,7 @@ can find every site when we prepare the actual PR.
 
 ### [P-001] Expose CUDA memory stats
 
-**Status:** Proposed
+**Status:** Proposed — public surface stubbed in `LLMCompressorSharp.TorchExtensions/Memory/NvmlMemoryStats.cs` (returns null until NVML P/Invoke lands).
 **Category:** Memory
 **Source files we'd add/modify in `dotnet/TorchSharp`:**
 - `src/TorchSharp/Tensor/torch.cuda.cs` (add `memory_allocated`, `memory_reserved`, `memory_stats`)
