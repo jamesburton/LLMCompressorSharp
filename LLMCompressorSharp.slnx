@@ -1,0 +1,22 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/LLMCompressorSharp.TorchExtensions/LLMCompressorSharp.TorchExtensions.csproj" />
+    <Project Path="src/LLMCompressorSharp.Core/LLMCompressorSharp.Core.csproj" />
+    <Project Path="src/LLMCompressorSharp.Transformers/LLMCompressorSharp.Transformers.csproj" />
+    <Project Path="src/LLMCompressorSharp.Cli/LLMCompressorSharp.Cli.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/LLMCompressorSharp.Tests/LLMCompressorSharp.Tests.csproj" />
+  </Folder>
+  <Folder Name="/Solution Items/">
+    <File Path=".editorconfig" />
+    <File Path=".gitattributes" />
+    <File Path=".gitignore" />
+    <File Path="Directory.Build.props" />
+    <File Path="Directory.Packages.props" />
+    <File Path="global.json" />
+    <File Path="README.md" />
+    <File Path="PR_TO_TORCHSHARP.md" />
+    <File Path="stylecop.json" />
+  </Folder>
+</Solution>
