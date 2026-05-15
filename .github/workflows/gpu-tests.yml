@@ -1,0 +1,57 @@
+name: GPU Tests
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 3 * * *'   # nightly at 03:00 UTC
+
+jobs:
+  gpu-tests:
+    name: GPU tests (self-hosted)
+    runs-on: [self-hosted, cuda]
+    if: ${{ vars.ENABLE_GPU_TESTS == 'true' }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup .NET 10
+        uses: actions/setup-dotnet@v4
+        with:
+          global-json-file: global.json
+
+      - name: NuGet cache
+        uses: actions/cache@v4
+        with:
+          path: ~/.nuget/packages
+          key: gpu-nuget-${{ hashFiles('**/Directory.Packages.props', '**/*.csproj') }}
+
+      - name: HuggingFace cache
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/huggingface/hub
+          key: gpu-hf-v1
+
+      - name: Restore
+        run: dotnet restore LLMCompressorSharp.slnx
+
+      - name: Build
+        run: dotnet build LLMCompressorSharp.slnx --no-restore --configuration Release
+
+      - name: Test (GPU)
+        run: >
+          dotnet test LLMCompressorSharp.slnx
+          --no-build --configuration Release
+          --filter "Category=Gpu"
+          --logger "trx;LogFileName=gpu-test-results.trx"
+          --results-directory artifacts/test-results
+
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: gpu-test-results
+          path: artifacts/test-results/**/*.trx
+          if-no-files-found: warn
