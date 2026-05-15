@@ -1,0 +1,21 @@
+* text=auto eol=lf
+
+*.cs           text eol=lf
+*.csproj       text eol=lf
+*.slnx         text eol=lf
+*.props        text eol=lf
+*.targets      text eol=lf
+*.json         text eol=lf
+*.yml          text eol=lf
+*.yaml         text eol=lf
+*.md           text eol=lf
+*.editorconfig text eol=lf
+*.gitattributes text eol=lf
+*.gitignore    text eol=lf
+
+*.dll binary
+*.pdb binary
+*.png binary
+*.jpg binary
+*.safetensors binary
+*.onnx binary
