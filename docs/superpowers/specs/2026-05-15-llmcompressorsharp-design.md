@@ -24,7 +24,7 @@ A .NET 10 / C# reimplementation of the Python [llm-compressor](https://github.co
 - Architectures beyond the LLaMA family (Qwen-MoE, DeepSeek, Granite, GLM, Gemma — deferred to post-1.0).
 - Multi-GPU (DistributedDataParallel) compression. TorchSharp has no DDP; single-GPU + CPU/disk offload is the production path for ≤70B models.
 - `torch.compile`-accelerated AutoRound. Implementable but unviably slow without compile; tracked as a known limitation.
-- ONNX export from .NET (use ONNX Runtime in .NET for inference, but export via Python).
+- (none related to ONNX — see Section 5 Phase 5.5 for pure-.NET export plan)
 - A full `transformers` substitute. The `Transformers` project grows model-family by model-family as needed.
 
 ---
@@ -225,9 +225,32 @@ Six phases mapped to `docs/llmcompressorsharp/roadmap.md`. Each phase ends with 
 | 3 — LLaMA + HF loader | 6–8 weeks | Load SmolLM2-135M, forward pass parity with reference | v0.3.0-alpha |
 | 4 — GPTQ + SparseGPT | 6–8 weeks | W4A16 perplexity within +0.3 of baseline on TinyLlama-1.1B | v0.4.0-alpha |
 | 5 — AWQ + output | 4–6 weeks | AWQ + compressed-tensors output, validated in Python vLLM | v0.5.0-alpha |
+| 5.5 — Pure-.NET ONNX export | 2–4 weeks (parallel workstreams) | Hand-coded LLaMA ONNX exporter + ONNX tracer in `TorchExtensions`; both validated against ORT inference | v0.5.5-alpha |
 | 6 — CLI + polish | 2–3 weeks | `dnx llmc compress`, recipe presets, docs, samples | v0.6.0 |
 
-**Total: 27–37 weeks (~6–9 months) for v0.6.0 covering LLaMA-family models.**
+**Total: 29–41 weeks (~7–10 months) for v0.6.0 covering LLaMA-family models including ONNX export.**
+
+### Phase 5.5 — Pure-.NET ONNX Export (Detail)
+
+Two workstreams run in parallel; convergence depends on tracer maturity.
+
+**Workstream A — Hand-coded exporter (stop-gap + reference baseline):**
+- `LlamaForCausalLM.ToOnnx(LlamaConfig)` — manual graph builder mirroring `forward()`
+- Uses `Microsoft.ML.OnnxRuntime` protobuf types (or direct `Google.Protobuf` against `onnx.proto`)
+- Handles KV cache as `past_key_values` graph inputs / `present_key_values` outputs
+- Dynamic axes for batch and sequence length
+- Quantization ops via ONNX opset 21+ (`QuantizeLinear`/`DequantizeLinear`, `Int4`/`UInt4` packed dtypes, block_size attribute)
+- Validation: load output in ONNX Runtime; assert near-bit-exact parity with TorchSharp inference on a fixed input batch (tolerance: 1e-3 for FP32, 1e-2 for FP16)
+
+**Workstream B — ONNX tracer (preferred long-term solution):**
+- Lives in `LLMCompressorSharp.TorchExtensions.OnnxTracing`
+- Operates by attaching forward hooks to every module and recording each op call into an ONNX graph builder
+- Goal: works for any architecture without per-family code
+- Harder bits: control flow (no graph-changing branches expected in transformer forward passes — verify on each architecture), shape inference, KV cache pattern recognition
+
+**Convergence rule:** When the tracer passes the same validation suite as the hand-coded exporter on LLaMA *and* on at least one additional architecture pattern (we'll synthesize a small variant for this test), the hand-coded path is retired and `LlamaForCausalLM.ToOnnx()` becomes a thin wrapper that invokes the tracer. The hand-coded exporter remains in the codebase as the reference baseline used to validate the tracer in CI for the LLaMA family.
+
+**Use of hand-coded output to bootstrap tracer:** The hand-coded exporter's emitted graphs are the ground-truth fixtures for tracer development. When the tracer produces a graph that diverges from the hand-coded version, that diff is the next bug to fix.
 
 ### Decision Gates
 
@@ -258,5 +281,4 @@ Full risk register lives in `docs/llmcompressorsharp/pitfalls.md`. Key items:
 - Multi-GPU compression (DDP)
 - AutoRound (no `torch.compile` equivalent)
 - SpinQuant, QuIP, iMatrix (lower-priority algorithms)
-- ONNX export from .NET
 - Live in-browser compression visualisation
