@@ -37,14 +37,20 @@ public class MSEObserverTests
     [Fact]
     public void GetQuantParams_PicksRangeThatMinimisesMse()
     {
-        // Build a dataset with a single outlier; MSE optimal range should be tighter than absMax
+        // Build a dataset with a single moderate outlier just outside the majority range.
+        // MSE grid-search should clip the outlier and produce a tighter scale than abs-max.
+        // With 99 values in [0, 1] and 1 outlier at 1.5:
+        //   - MinMax scale = 1.5 / 7 ≈ 0.214 (full range, includes outlier)
+        //   - MSE-optimal clips the outlier; candidateMax ≈ 1.0 gives lower MSE than 1.5
+        //     because the quantization step improvement on 99 majority values outweighs
+        //     the small clipping cost on 1 value ((1.5-1)^2 / 100 = 0.0025 vs ≈ 0.0038).
         var values = new float[100];
         for (var i = 0; i < 99; i++)
         {
-            values[i] = i / 99f; // 0..1 evenly
+            values[i] = i / 98f; // 0..1 evenly (99 values)
         }
 
-        values[99] = 100f; // outlier
+        values[99] = 1.5f; // moderate outlier — just outside the majority range
 
         var mseObs = new MSEObserver(gridPoints: 100);
         var minMaxObs = new MinMaxObserver();
