@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <RootNamespace>LLMCompressorSharp.Transformers</RootNamespace>
+    <AssemblyName>LLMCompressorSharp.Transformers</AssemblyName>
+    <PackageId>LLMCompressorSharp.Transformers</PackageId>
+    <Description>Transformer architectures (starting with LLaMA), HuggingFace cache + loader, and tokenizer integration for LLMCompressorSharp.</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\LLMCompressorSharp.Core\LLMCompressorSharp.Core.csproj" />
+    <ProjectReference Include="..\LLMCompressorSharp.TorchExtensions\LLMCompressorSharp.TorchExtensions.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="TorchSharp" />
+    <PackageReference Include="TorchSharp.PyBridge" />
+    <PackageReference Include="Microsoft.ML.Tokenizers" />
+  </ItemGroup>
+
+</Project>
