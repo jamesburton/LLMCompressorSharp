@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>LLMCompressorSharp.Cli</RootNamespace>
+    <AssemblyName>llmc</AssemblyName>
+    <PackageId>LLMCompressorSharp</PackageId>
+    <PackAsTool>true</PackAsTool>
+    <ToolCommandName>llmc</ToolCommandName>
+    <Description>LLMCompressorSharp command-line tool. Compresses LLaMA-family LLMs via GPTQ, AWQ, SparseGPT, SmoothQuant, WANDA, and Magnitude pruning.</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\LLMCompressorSharp.Core\LLMCompressorSharp.Core.csproj" />
+    <ProjectReference Include="..\LLMCompressorSharp.Transformers\LLMCompressorSharp.Transformers.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="TorchSharp" />
+    <PackageReference Include="TorchSharp-cpu" />
+    <PackageReference Include="System.CommandLine" />
+    <PackageReference Include="Spectre.Console" />
+  </ItemGroup>
+
+</Project>
