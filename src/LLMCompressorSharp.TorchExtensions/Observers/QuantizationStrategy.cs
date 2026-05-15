@@ -4,7 +4,7 @@ namespace LLMCompressorSharp.TorchExtensions.Observers;
 
 /// <summary>
 /// The granularity at which an <see cref="Observer"/> accumulates statistics
-/// and an <see cref="FakeQuantizeFunction"/> applies quantization.
+/// and an <see cref="LLMCompressorSharp.TorchExtensions.Quantization.FakeQuantizeFunction"/> applies quantization.
 /// </summary>
 public enum QuantizationStrategy
 {
