@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <RootNamespace>LLMCompressorSharp.Core</RootNamespace>
+    <AssemblyName>LLMCompressorSharp.Core</AssemblyName>
+    <PackageId>LLMCompressorSharp.Core</PackageId>
+    <Description>Core compression algorithms (RTN, GPTQ, SparseGPT, SmoothQuant, AWQ, WANDA, Magnitude) and the modifier/recipe framework.</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\LLMCompressorSharp.TorchExtensions\LLMCompressorSharp.TorchExtensions.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="TorchSharp" />
+    <PackageReference Include="TorchSharp.PyBridge" />
+    <PackageReference Include="YamlDotNet" />
+  </ItemGroup>
+
+</Project>
