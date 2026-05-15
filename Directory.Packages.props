@@ -1,0 +1,35 @@
+<Project>
+
+  <PropertyGroup>
+    <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- Build & analyzers -->
+    <PackageVersion Include="StyleCop.Analyzers" Version="1.2.0-beta.556" />
+    <PackageVersion Include="MinVer" Version="6.0.0" />
+
+    <!-- ML / Tensor -->
+    <PackageVersion Include="TorchSharp" Version="0.107.0" />
+    <PackageVersion Include="TorchSharp-cpu" Version="0.107.0" />
+    <PackageVersion Include="TorchSharp.PyBridge" Version="1.4.3" />
+    <PackageVersion Include="Microsoft.ML.OnnxRuntime" Version="1.26.0" />
+    <PackageVersion Include="Microsoft.ML.Tokenizers" Version="1.0.2" />
+    <PackageVersion Include="System.Numerics.Tensors" Version="10.0.0" />
+
+    <!-- CLI -->
+    <PackageVersion Include="System.CommandLine" Version="2.0.0-rc.1.26052.1" />
+    <PackageVersion Include="Spectre.Console" Version="0.50.0" />
+
+    <!-- Recipe parsing -->
+    <PackageVersion Include="YamlDotNet" Version="16.3.0" />
+
+    <!-- Testing -->
+    <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.13.0" />
+    <PackageVersion Include="xunit.v3" Version="1.0.0" />
+    <PackageVersion Include="xunit.runner.visualstudio" Version="3.0.0" />
+    <PackageVersion Include="coverlet.collector" Version="6.0.4" />
+    <PackageVersion Include="FluentAssertions" Version="7.0.0" />
+  </ItemGroup>
+
+</Project>
