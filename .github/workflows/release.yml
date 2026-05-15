@@ -1,0 +1,47 @@
+name: Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Release tag (e.g. v0.1.0-alpha). Must be pre-created on main.'
+        required: true
+
+jobs:
+  publish:
+    name: Pack and publish to NuGet
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+
+    steps:
+      - name: Checkout tag
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event.inputs.tag }}
+
+      - name: Setup .NET 10
+        uses: actions/setup-dotnet@v4
+        with:
+          global-json-file: global.json
+
+      - name: Restore
+        run: dotnet restore LLMCompressorSharp.slnx
+
+      - name: Build
+        run: dotnet build LLMCompressorSharp.slnx --no-restore --configuration Release
+
+      - name: Pack
+        run: >
+          dotnet pack LLMCompressorSharp.slnx
+          --no-build --configuration Release
+          --output artifacts/packages
+
+      - name: Push to NuGet
+        env:
+          NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
+        run: >
+          dotnet nuget push 'artifacts/packages/*.nupkg'
+          --api-key $NUGET_API_KEY
+          --source https://api.nuget.org/v3/index.json
+          --skip-duplicate
