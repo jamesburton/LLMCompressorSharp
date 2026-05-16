@@ -14,43 +14,6 @@ namespace LLMCompressorSharp.Tests.Transformers.Loading;
 /// </summary>
 public class LlamaModelLoaderTests
 {
-    private static LlamaConfig MakeConfig()
-    {
-        return new LlamaConfig
-        {
-            HiddenSize = 8,
-            IntermediateSize = 32,
-            NumHiddenLayers = 1,
-            NumAttentionHeads = 2,
-            NumKeyValueHeads = 2,
-            VocabSize = 50,
-            MaxPositionEmbeddings = 16,
-            HiddenAct = "silu",
-            TieWordEmbeddings = false,
-        };
-    }
-
-    private static Dictionary<string, Tensor> BuildHfWeights(LlamaConfig config)
-    {
-        var headProj = config.NumAttentionHeads * config.HeadDim;
-        var kvProj = config.NumKeyValueHeads * config.HeadDim;
-        return new Dictionary<string, Tensor>
-        {
-            ["model.embed_tokens.weight"] = randn(config.VocabSize, config.HiddenSize),
-            ["model.layers.0.self_attn.q_proj.weight"] = randn(headProj, config.HiddenSize),
-            ["model.layers.0.self_attn.k_proj.weight"] = randn(kvProj, config.HiddenSize),
-            ["model.layers.0.self_attn.v_proj.weight"] = randn(kvProj, config.HiddenSize),
-            ["model.layers.0.self_attn.o_proj.weight"] = randn(config.HiddenSize, headProj),
-            ["model.layers.0.mlp.gate_proj.weight"] = randn(config.IntermediateSize, config.HiddenSize),
-            ["model.layers.0.mlp.up_proj.weight"] = randn(config.IntermediateSize, config.HiddenSize),
-            ["model.layers.0.mlp.down_proj.weight"] = randn(config.HiddenSize, config.IntermediateSize),
-            ["model.layers.0.input_layernorm.weight"] = randn(config.HiddenSize),
-            ["model.layers.0.post_attention_layernorm.weight"] = randn(config.HiddenSize),
-            ["model.norm.weight"] = randn(config.HiddenSize),
-            ["lm_head.weight"] = randn(config.VocabSize, config.HiddenSize),
-        };
-    }
-
     [Fact]
     public void Load_PopulatesAllParameters_WithMatchingShapes()
     {
@@ -162,5 +125,42 @@ public class LlamaModelLoaderTests
                 t.Dispose();
             }
         }
+    }
+
+    private static LlamaConfig MakeConfig()
+    {
+        return new LlamaConfig
+        {
+            HiddenSize = 8,
+            IntermediateSize = 32,
+            NumHiddenLayers = 1,
+            NumAttentionHeads = 2,
+            NumKeyValueHeads = 2,
+            VocabSize = 50,
+            MaxPositionEmbeddings = 16,
+            HiddenAct = "silu",
+            TieWordEmbeddings = false,
+        };
+    }
+
+    private static Dictionary<string, Tensor> BuildHfWeights(LlamaConfig config)
+    {
+        var headProj = config.NumAttentionHeads * config.HeadDim;
+        var kvProj = config.NumKeyValueHeads * config.HeadDim;
+        return new Dictionary<string, Tensor>
+        {
+            ["model.embed_tokens.weight"] = randn(config.VocabSize, config.HiddenSize),
+            ["model.layers.0.self_attn.q_proj.weight"] = randn(headProj, config.HiddenSize),
+            ["model.layers.0.self_attn.k_proj.weight"] = randn(kvProj, config.HiddenSize),
+            ["model.layers.0.self_attn.v_proj.weight"] = randn(kvProj, config.HiddenSize),
+            ["model.layers.0.self_attn.o_proj.weight"] = randn(config.HiddenSize, headProj),
+            ["model.layers.0.mlp.gate_proj.weight"] = randn(config.IntermediateSize, config.HiddenSize),
+            ["model.layers.0.mlp.up_proj.weight"] = randn(config.IntermediateSize, config.HiddenSize),
+            ["model.layers.0.mlp.down_proj.weight"] = randn(config.HiddenSize, config.IntermediateSize),
+            ["model.layers.0.input_layernorm.weight"] = randn(config.HiddenSize),
+            ["model.layers.0.post_attention_layernorm.weight"] = randn(config.HiddenSize),
+            ["model.norm.weight"] = randn(config.HiddenSize),
+            ["lm_head.weight"] = randn(config.VocabSize, config.HiddenSize),
+        };
     }
 }
