@@ -47,7 +47,11 @@ public class SafetensorsWriterTests : IDisposable
     public void Save_ThenLoad_PreservesTensorValuesAndShapes()
     {
         using var w1 = tensor(new float[] { -1f, 0f, 1f, 2f });
-        using var w2 = tensor(new float[,] { { 1f, 2f }, { 3f, 4f } });
+        using var w2 = tensor(new float[,]
+        {
+            { 1f, 2f },
+            { 3f, 4f },
+        });
 
         var state = new CompressionState(new Dictionary<string, Tensor>
         {
