@@ -14,6 +14,11 @@ namespace LLMCompressorSharp.Tests.Recipes;
 /// Tests for <see cref="RecipeBuilder"/> — recipe → modifier list materialization,
 /// plus the end-to-end Recipe → CompressionSession integration.
 /// </summary>
+/// <remarks>
+/// Placed in the "ModifierRegistry" collection to prevent parallel execution against other test classes
+/// that mutate the shared static <see cref="ModifierRegistry"/>.
+/// </remarks>
+[Collection("ModifierRegistry")]
 public class RecipeBuilderTests : IDisposable
 {
     public RecipeBuilderTests()

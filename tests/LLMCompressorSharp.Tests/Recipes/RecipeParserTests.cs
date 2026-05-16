@@ -11,6 +11,11 @@ namespace LLMCompressorSharp.Tests.Recipes;
 /// <summary>
 /// Tests for <see cref="RecipeParser"/> YAML deserialization with polymorphic modifier dispatch.
 /// </summary>
+/// <remarks>
+/// Placed in the "ModifierRegistry" collection to prevent parallel execution against other test classes
+/// that mutate the shared static <see cref="LLMCompressorSharp.Core.Recipes.ModifierRegistry"/>.
+/// </remarks>
+[Collection("ModifierRegistry")]
 public class RecipeParserTests : IDisposable
 {
     /// <summary>Initializes a new instance of the <see cref="RecipeParserTests"/> class.</summary>
