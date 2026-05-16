@@ -76,30 +76,30 @@ public class SmoothQuantModifierTests
     public void OnEnd_PreservesMathematicalIdentity()
     {
         using var g = tensor(new float[] { 1f, 2f, 3f });
-        using var W = tensor(new float[,]
+        using var w = tensor(new float[,]
         {
             { 0.5f, 1f, -1f },
             { 2f, -0.5f, 0.25f },
         });
-        using var X = tensor(new float[,]
+        using var x = tensor(new float[,]
         {
             { 0.1f, 0.5f, -1f },
             { 0.2f, -0.3f, 0.7f },
         });
 
-        using var Xg = X.mul(g);
-        using var yRef = Xg.matmul(W.t());
+        using var xg = x.mul(g);
+        using var yRef = xg.matmul(w.t());
         var yRefArr = yRef.cpu().data<float>().ToArray();
 
         var state = new CompressionState(new Dictionary<string, Tensor>
         {
             ["g.weight"] = g,
-            ["proj.weight"] = W,
+            ["proj.weight"] = w,
         })
         {
             LayerActivations = new Dictionary<string, Tensor>
             {
-                ["proj"] = Xg,
+                ["proj"] = xg,
             },
         };
 
@@ -111,9 +111,9 @@ public class SmoothQuantModifierTests
         RunLifecycle(modifier, state, batchCount: 1);
 
         using var gNew = state.NamedWeights["g.weight"];
-        using var WNew = state.NamedWeights["proj.weight"];
-        using var XgNew = X.mul(gNew);
-        using var ySmoothed = XgNew.matmul(WNew.t());
+        using var wNew = state.NamedWeights["proj.weight"];
+        using var xgNew = x.mul(gNew);
+        using var ySmoothed = xgNew.matmul(wNew.t());
         var ySmoothedArr = ySmoothed.cpu().data<float>().ToArray();
 
         for (var i = 0; i < yRefArr.Length; i++)
