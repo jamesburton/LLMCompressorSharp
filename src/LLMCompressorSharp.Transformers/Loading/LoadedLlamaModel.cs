@@ -1,6 +1,7 @@
 // Copyright (c) James Burton. Licensed under the Apache-2.0 license.
 
 using LLMCompressorSharp.Transformers.Architectures.Llama;
+using LLMCompressorSharp.Transformers.Tokenization;
 
 namespace LLMCompressorSharp.Transformers.Loading;
 
@@ -13,4 +14,8 @@ namespace LLMCompressorSharp.Transformers.Loading;
 public sealed record LoadedLlamaModel(
     LlamaForCausalLM Model,
     LlamaConfig Config,
-    string SnapshotPath);
+    string SnapshotPath)
+{
+    /// <summary>Gets the optional tokenizer loaded alongside the model.</summary>
+    public LlamaTokenizer? Tokenizer { get; init; }
+}
