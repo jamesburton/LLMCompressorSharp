@@ -5,6 +5,7 @@ using LLMCompressorSharp.Core.Algorithms;
 using LLMCompressorSharp.Core.Algorithms.Configs;
 using LLMCompressorSharp.Core.Algorithms.Pruning;
 using LLMCompressorSharp.Core.Algorithms.Rtn;
+using LLMCompressorSharp.Core.Algorithms.SmoothQuant;
 using LLMCompressorSharp.Core.Recipes;
 using Xunit;
 
@@ -33,6 +34,8 @@ public class AlgorithmsRegistrationTests : IDisposable
 
         ModifierRegistry.Resolve("RTN").Should().NotBeNull();
         ModifierRegistry.Resolve("MagnitudePruning").Should().NotBeNull();
+        ModifierRegistry.Resolve("WANDA").Should().NotBeNull();
+        ModifierRegistry.Resolve("SmoothQuant").Should().NotBeNull();
     }
 
     [Fact]
@@ -56,5 +59,13 @@ public class AlgorithmsRegistrationTests : IDisposable
         var pruneReg = ModifierRegistry.Resolve("MagnitudePruning");
         var pruneInstance = pruneReg!.Factory(new MagnitudePruningConfig());
         pruneInstance.Should().BeOfType<MagnitudePruningModifier>();
+
+        var wandaReg = ModifierRegistry.Resolve("WANDA");
+        var wandaInstance = wandaReg!.Factory(new WandaConfig());
+        wandaInstance.Should().BeOfType<WandaModifier>();
+
+        var sqReg = ModifierRegistry.Resolve("SmoothQuant");
+        var sqInstance = sqReg!.Factory(new SmoothQuantConfig());
+        sqInstance.Should().BeOfType<SmoothQuantModifier>();
     }
 }

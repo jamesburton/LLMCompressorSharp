@@ -3,6 +3,7 @@
 using LLMCompressorSharp.Core.Algorithms.Configs;
 using LLMCompressorSharp.Core.Algorithms.Pruning;
 using LLMCompressorSharp.Core.Algorithms.Rtn;
+using LLMCompressorSharp.Core.Algorithms.SmoothQuant;
 using LLMCompressorSharp.Core.Recipes;
 
 namespace LLMCompressorSharp.Core.Algorithms;
@@ -21,6 +22,8 @@ public static class AlgorithmsRegistration
     {
         RegisterRtn();
         RegisterMagnitudePruning();
+        RegisterWanda();
+        RegisterSmoothQuant();
     }
 
     /// <summary>Registers the RTN algorithm.</summary>
@@ -33,5 +36,17 @@ public static class AlgorithmsRegistration
     public static void RegisterMagnitudePruning()
     {
         ModifierRegistry.Register<MagnitudePruningConfig>("MagnitudePruning", c => new MagnitudePruningModifier(c));
+    }
+
+    /// <summary>Registers the WANDA algorithm.</summary>
+    public static void RegisterWanda()
+    {
+        ModifierRegistry.Register<WandaConfig>("WANDA", c => new WandaModifier(c));
+    }
+
+    /// <summary>Registers the SmoothQuant algorithm.</summary>
+    public static void RegisterSmoothQuant()
+    {
+        ModifierRegistry.Register<SmoothQuantConfig>("SmoothQuant", c => new SmoothQuantModifier(c));
     }
 }
