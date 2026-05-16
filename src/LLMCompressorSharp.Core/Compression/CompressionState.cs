@@ -36,6 +36,18 @@ public sealed class CompressionState
     /// <summary>Gets or sets the zero-based index of the current calibration batch.</summary>
     public int CurrentBatchIndex { get; set; }
 
+    /// <summary>
+    /// Gets or sets per-layer activation tensors collected during calibration, or
+    /// <see langword="null"/> if no activations are routed to the session.
+    /// </summary>
+    /// <remarks>
+    /// Phase 2b modifiers (WANDA, SmoothQuant) read activations from this dictionary using
+    /// the weight name stripped of its <c>.weight</c> suffix as the key. Phase 3 will populate
+    /// this dictionary automatically via forward hooks on a TorchSharp <c>Module</c>; until
+    /// then, tests populate it directly.
+    /// </remarks>
+    public IDictionary<string, Tensor>? LayerActivations { get; set; }
+
     /// <summary>Gets the deterministic RNG seed assigned to this session.</summary>
     public long RngSeed { get; }
 }
