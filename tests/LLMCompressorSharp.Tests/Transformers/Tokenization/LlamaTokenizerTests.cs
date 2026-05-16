@@ -12,6 +12,10 @@ namespace LLMCompressorSharp.Tests.Transformers.Tokenization;
 /// </summary>
 public class LlamaTokenizerTests
 {
+    // SmolLM2-135M is a GPT-2/BPE tokenizer: vocab.json + merges.txt required (no tokenizer.model).
+    private const string SmolLm2RepoId = "HuggingFaceTB/SmolLM2-135M";
+    private const string SmolLm2Revision = "main";
+
     [Fact]
     public void Constructor_NullSnapshotDir_Throws()
     {
@@ -73,10 +77,6 @@ public class LlamaTokenizerTests
         var ids = tokenizer.Encode(string.Empty);
         ids.Should().NotBeNull();
     }
-
-    // SmolLM2-135M is a GPT-2/BPE tokenizer: vocab.json + merges.txt required (no tokenizer.model).
-    private const string SmolLm2RepoId = "HuggingFaceTB/SmolLM2-135M";
-    private const string SmolLm2Revision = "main";
 
     private static string? GetSnapshotDir()
     {
