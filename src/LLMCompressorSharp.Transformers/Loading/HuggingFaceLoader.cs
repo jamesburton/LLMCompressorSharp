@@ -1,6 +1,7 @@
 // Copyright (c) James Burton. Licensed under the Apache-2.0 license.
 
 using LLMCompressorSharp.Transformers.Architectures.Llama;
+using LLMCompressorSharp.Transformers.Tokenization;
 
 namespace LLMCompressorSharp.Transformers.Loading;
 
@@ -73,5 +74,32 @@ public static class HuggingFaceLoader
         }
 
         return new LoadedLlamaModel(model, config, snapshotDir);
+    }
+
+    /// <summary>
+    /// Loads a model from the HuggingFace cache, including its tokenizer.
+    /// </summary>
+    /// <param name="repoId">Repo id in <c>org/repo</c> form.</param>
+    /// <param name="revision">Revision or branch; default <c>main</c>.</param>
+    /// <param name="environment">Environment provider for cache resolution; defaults to <see cref="SystemEnvironment.Instance"/>.</param>
+    /// <returns>The loaded model + config + snapshot path + tokenizer.</returns>
+    /// <exception cref="HuggingFaceLoadException">If the model or its snapshot cannot be loaded.</exception>
+    /// <exception cref="TokenizerLoadException">If the tokenizer cannot be loaded.</exception>
+    public static LoadedLlamaModel LoadWithTokenizer(
+        string repoId,
+        string? revision = "main",
+        IEnvironment? environment = null)
+    {
+        var loaded = Load(repoId, revision, environment);
+        try
+        {
+            var tokenizer = new LlamaTokenizer(loaded.SnapshotPath);
+            return loaded with { Tokenizer = tokenizer };
+        }
+        catch
+        {
+            loaded.Model.Dispose();
+            throw;
+        }
     }
 }
