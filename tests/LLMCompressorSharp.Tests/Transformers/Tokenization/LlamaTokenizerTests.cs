@@ -12,7 +12,7 @@ namespace LLMCompressorSharp.Tests.Transformers.Tokenization;
 /// </summary>
 public class LlamaTokenizerTests
 {
-    // SmolLM2-135M is a GPT-2/BPE tokenizer: vocab.json + merges.txt required (no tokenizer.model).
+    // SmolLM2-135M is a GPT-2/BPE tokenizer embedded in tokenizer.json (no separate vocab.json/merges.txt).
     private const string SmolLm2RepoId = "HuggingFaceTB/SmolLM2-135M";
     private const string SmolLm2Revision = "main";
 
@@ -31,14 +31,14 @@ public class LlamaTokenizerTests
     }
 
     [Fact]
-    public void Constructor_DirWithoutVocabFiles_Throws()
+    public void Constructor_DirWithoutTokenizerFiles_Throws()
     {
         var tempDir = Path.Combine(Path.GetTempPath(), $"llmc-tokenizer-test-{Guid.NewGuid():N}");
         Directory.CreateDirectory(tempDir);
         try
         {
             var act = () => new LlamaTokenizer(tempDir);
-            act.Should().Throw<TokenizerLoadException>().WithMessage("*vocab.json*");
+            act.Should().Throw<TokenizerLoadException>().WithMessage("*No tokenizer found*");
         }
         finally
         {
@@ -86,8 +86,9 @@ public class LlamaTokenizerTests
             var dir = HuggingFaceCache.GetSnapshotPath(cacheRoot, SmolLm2RepoId, SmolLm2Revision);
 
             return Directory.Exists(dir)
-                && File.Exists(Path.Combine(dir, "vocab.json"))
-                && File.Exists(Path.Combine(dir, "merges.txt"))
+                && (File.Exists(Path.Combine(dir, "tokenizer.json"))
+                    || (File.Exists(Path.Combine(dir, "vocab.json"))
+                        && File.Exists(Path.Combine(dir, "merges.txt"))))
                 ? dir
                 : null;
         }
