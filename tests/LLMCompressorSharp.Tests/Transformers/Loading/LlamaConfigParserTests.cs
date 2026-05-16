@@ -122,16 +122,17 @@ public class LlamaConfigParserTests
     public void LoadFromFile_ReadsAndParses()
     {
         var tmp = Path.GetTempFileName();
-        try
-        {
-            File.WriteAllText(tmp, @"{
+        var minimalJson = @"{
   ""hidden_size"": 8,
   ""intermediate_size"": 32,
   ""num_hidden_layers"": 1,
   ""num_attention_heads"": 2,
   ""num_key_value_heads"": 2,
   ""vocab_size"": 50
-}");
+}";
+        try
+        {
+            File.WriteAllText(tmp, minimalJson);
             var config = LlamaConfigParser.LoadFromFile(tmp);
             config.HiddenSize.Should().Be(8);
         }
