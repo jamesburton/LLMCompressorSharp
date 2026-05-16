@@ -99,4 +99,53 @@ stages:
             }
         }
     }
+
+    [Fact]
+    public void Recipe_WandaPruning_UsesActivationsToGuideSparsity()
+    {
+        var yaml = @"
+stages:
+  - name: prune
+    modifiers:
+      - type: WANDA
+        sparsity: 0.5
+        targets: [model.*]
+        ignore: [model.lm_head.*]
+";
+
+        var recipe = RecipeParser.Parse(yaml);
+        var modifiers = RecipeBuilder.Build(recipe);
+        modifiers.Should().HaveCount(1);
+
+        using var weight = ones(2, 4);
+        using var activation = tensor(new float[,]
+        {
+            { 0.1f, 0.1f, 0.1f, 10f },
+            { 0.1f, 0.1f, 0.1f, 10f },
+        });
+        using var lmHead = ones(2, 4);
+
+        var state = new CompressionState(new Dictionary<string, Tensor>
+        {
+            ["model.layer.0.weight"] = weight,
+            ["model.lm_head.weight"] = lmHead,
+        })
+        {
+            LayerActivations = new Dictionary<string, Tensor>
+            {
+                ["model.layer.0"] = activation,
+            },
+        };
+
+        var session = new CompressionSession(modifiers);
+        var status = session.Run(state, new[] { activation });
+        status.Should().Be(SessionStatus.Completed);
+
+        var processed = state.NamedWeights["model.layer.0.weight"].cpu();
+        processed[0, 3].item<float>().Should().Be(1f);
+        processed[1, 3].item<float>().Should().Be(1f);
+
+        state.NamedWeights["model.lm_head.weight"].cpu().data<float>().ToArray()
+            .Should().AllSatisfy(v => v.Should().Be(1f));
+    }
 }
