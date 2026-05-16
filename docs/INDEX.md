@@ -53,6 +53,7 @@ Feasibility study and implementation plan for a .NET reimplementation.
 | [algorithm-mapping.md](./llmcompressorsharp/algorithm-mapping.md) | Algorithm-by-algorithm feasibility |
 | [pitfalls.md](./llmcompressorsharp/pitfalls.md) | Critical risks and blockers |
 | [roadmap.md](./llmcompressorsharp/roadmap.md) | Phased implementation plan |
+| [cache-conventions.md](./llmcompressorsharp/cache-conventions.md) | Shared HF/Ollama cache rules — every loader follows this |
 
 ---
 

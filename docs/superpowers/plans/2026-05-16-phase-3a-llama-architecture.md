@@ -76,8 +76,8 @@ tests/LLMCompressorSharp.Tests/
 
 **Out of scope:**
 - KV cache (Phase 3c if needed for generation)
-- Weight loading from HuggingFace (Phase 3b)
-- Tokenizer (Phase 3c)
+- Weight loading from HuggingFace (Phase 3b) — must follow [`docs/llmcompressorsharp/cache-conventions.md`](../../llmcompressorsharp/cache-conventions.md): every loader/writer in this project uses the shared HuggingFace cache; alternative platform caches (Ollama, llama.cpp) are discovered read-only and never duplicated
+- Tokenizer (Phase 3c) — also follows the cache conventions doc for tokenizer files (they live in `snapshots/{revision}/` alongside weights)
 - Numerical parity with Python `transformers` (Phase 3c)
 - Quantized inference (the architecture is FP32; modifiers compress it post-hoc)
 

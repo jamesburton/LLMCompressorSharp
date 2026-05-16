@@ -108,6 +108,7 @@ Contents (v0.6.0):
   - Resolves models via standard HF cache layout (`$HF_HOME` or `~/.cache/huggingface/hub/`, directory pattern `models--{org}--{repo}/snapshots/{revision}/`)
   - On miss, downloads via Hub API + writes to the shared cache
   - Sharded safetensors support (reads `model.safetensors.index.json`)
+  - **MUST follow [`docs/llmcompressorsharp/cache-conventions.md`](../../llmcompressorsharp/cache-conventions.md):** every loader/writer uses the shared HuggingFace cache; alternative platform caches (Ollama, llama.cpp, PyTorch hub) are detected read-only and never duplicated. The CLI exposes `--cache-dir`, `--external-cache`, `--offline` for explicit control.
 - `Loading/LlamaConfigParser` — `config.json` → `LlamaConfig`.
 - `Tokenization/LlamaTokenizer` — thin wrapper over `Microsoft.ML.Tokenizers`.
 - `IArchitecture` interface for plugging in future families.
