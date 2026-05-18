@@ -2,6 +2,7 @@
 
 using TorchSharp;
 using static TorchSharp.torch;
+using static TorchSharp.torch.nn;
 
 namespace LLMCompressorSharp.Core.Compression;
 
@@ -47,6 +48,17 @@ public sealed class CompressionState
     /// then, tests populate it directly.
     /// </remarks>
     public IDictionary<string, Tensor>? LayerActivations { get; set; }
+
+    /// <summary>
+    /// Gets or sets the named module dictionary used by hook-based modifiers (e.g. GPTQ, SparseGPT).
+    /// Keys match those in <see cref="NamedWeights"/>, with the <c>.weight</c> suffix stripped.
+    /// When null, hook-based modifiers are not supported.
+    /// </summary>
+    /// <remarks>
+    /// Phase 4b populates this from the LLaMA module hierarchy via
+    /// <c>model.named_modules()</c> filtered to <c>Linear</c> layers.
+    /// </remarks>
+    public IDictionary<string, Module<Tensor, Tensor>>? NamedModules { get; set; }
 
     /// <summary>Gets the deterministic RNG seed assigned to this session.</summary>
     public long RngSeed { get; }
