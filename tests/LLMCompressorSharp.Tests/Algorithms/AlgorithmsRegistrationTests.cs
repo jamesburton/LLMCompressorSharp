@@ -3,6 +3,7 @@
 using FluentAssertions;
 using LLMCompressorSharp.Core.Algorithms;
 using LLMCompressorSharp.Core.Algorithms.Configs;
+using LLMCompressorSharp.Core.Algorithms.Gptq;
 using LLMCompressorSharp.Core.Algorithms.Pruning;
 using LLMCompressorSharp.Core.Algorithms.Rtn;
 using LLMCompressorSharp.Core.Algorithms.SmoothQuant;
@@ -36,6 +37,7 @@ public class AlgorithmsRegistrationTests : IDisposable
         ModifierRegistry.Resolve("MagnitudePruning").Should().NotBeNull();
         ModifierRegistry.Resolve("WANDA").Should().NotBeNull();
         ModifierRegistry.Resolve("SmoothQuant").Should().NotBeNull();
+        ModifierRegistry.Resolve("GPTQ").Should().NotBeNull();
     }
 
     [Fact]
@@ -67,5 +69,9 @@ public class AlgorithmsRegistrationTests : IDisposable
         var sqReg = ModifierRegistry.Resolve("SmoothQuant");
         var sqInstance = sqReg!.Factory(new SmoothQuantConfig());
         sqInstance.Should().BeOfType<SmoothQuantModifier>();
+
+        var gptqReg = ModifierRegistry.Resolve("GPTQ");
+        var gptqInstance = gptqReg!.Factory(new GPTQConfig());
+        gptqInstance.Should().BeOfType<GPTQModifier>();
     }
 }

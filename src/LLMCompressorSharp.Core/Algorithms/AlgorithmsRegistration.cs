@@ -1,6 +1,7 @@
 // Copyright (c) James Burton. Licensed under the Apache-2.0 license.
 
 using LLMCompressorSharp.Core.Algorithms.Configs;
+using LLMCompressorSharp.Core.Algorithms.Gptq;
 using LLMCompressorSharp.Core.Algorithms.Pruning;
 using LLMCompressorSharp.Core.Algorithms.Rtn;
 using LLMCompressorSharp.Core.Algorithms.SmoothQuant;
@@ -24,6 +25,7 @@ public static class AlgorithmsRegistration
         RegisterMagnitudePruning();
         RegisterWanda();
         RegisterSmoothQuant();
+        RegisterGptq();
     }
 
     /// <summary>Registers the RTN algorithm.</summary>
@@ -48,5 +50,11 @@ public static class AlgorithmsRegistration
     public static void RegisterSmoothQuant()
     {
         ModifierRegistry.Register<SmoothQuantConfig>("SmoothQuant", c => new SmoothQuantModifier(c));
+    }
+
+    /// <summary>Registers the GPTQ algorithm.</summary>
+    public static void RegisterGptq()
+    {
+        ModifierRegistry.Register<GPTQConfig>("GPTQ", c => new GPTQModifier(c));
     }
 }
