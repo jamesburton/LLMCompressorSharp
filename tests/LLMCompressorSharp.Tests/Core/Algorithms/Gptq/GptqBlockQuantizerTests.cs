@@ -15,16 +15,6 @@ namespace LLMCompressorSharp.Tests.Core.Algorithms.Gptq;
 /// </summary>
 public class GptqBlockQuantizerTests
 {
-    private static GPTQConfig MakeConfig(int numBits = 8, int blockSize = 128) =>
-        new GPTQConfig
-        {
-            NumBits = numBits,
-            Symmetric = true,
-            Strategy = QuantizationStrategy.PerTensor,
-            BlockSize = blockSize,
-            DampeningFrac = 0.01f,
-        };
-
     [Fact]
     public void Quantize_ZeroWeight_ReturnsZeroWeight()
     {
@@ -129,7 +119,11 @@ public class GptqBlockQuantizerTests
         // With identity Hinv, quantizing column 0 produces no change in column 1.
         // At high bit width the quantized result should match the original.
         var config = MakeConfig(numBits: 16, blockSize: 1);
-        using var w = tensor(new float[,] { { 1f, 2f }, { 3f, 4f } });
+        using var w = tensor(new float[,]
+        {
+            { 1f, 2f },
+            { 3f, 4f },
+        });
         using var hinv = eye(2, dtype: ScalarType.Float32);
 
         using var wq = GptqBlockQuantizer.Quantize(w, hinv, config);
@@ -142,4 +136,14 @@ public class GptqBlockQuantizerTests
         arr[2].Should().BeApproximately(3f, 0.01f);
         arr[3].Should().BeApproximately(4f, 0.01f);
     }
+
+    private static GPTQConfig MakeConfig(int numBits = 8, int blockSize = 128) =>
+        new GPTQConfig
+        {
+            NumBits = numBits,
+            Symmetric = true,
+            Strategy = QuantizationStrategy.PerTensor,
+            BlockSize = blockSize,
+            DampeningFrac = 0.01f,
+        };
 }
